@@ -8,7 +8,7 @@ export const Input = ({ label, id: propsId, ...props }: Props) => {
   const id = propsId ?? generatedId
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 flex-1">
       <label htmlFor={id} className="text-base font-medium text-gray-900">
         {label}
       </label>
