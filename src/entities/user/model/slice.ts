@@ -18,7 +18,12 @@ export const userSlice = createSlice({
       state.apiTokenInstance = action.payload.apiTokenInstance
     },
   },
+  selectors: {
+    selectIdInstance: (state) => state.idInstance,
+    selectApiTokenInstance: (state) => state.apiTokenInstance,
+  },
 })
 
 export const userReducer = userSlice.reducer
 export const userActions = userSlice.actions
+export const userSelectors = userSlice.selectors

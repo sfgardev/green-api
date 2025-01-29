@@ -1,1 +1,1 @@
-export { userReducer, userActions } from './model/slice'
+export { userReducer, userActions, userSelectors } from './model/slice'
