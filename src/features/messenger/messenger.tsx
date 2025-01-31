@@ -1,7 +1,7 @@
 import { messengerApi } from '@/features/messenger/api/api'
 import { ReceiveNotificationModel } from '@/features/messenger/api/types'
 import { Button } from '@/shared/ui/button'
-import { FormEvent, useCallback, useEffect, useRef } from 'react'
+import { FormEvent, KeyboardEvent, useCallback, useRef } from 'react'
 
 type Props = {
   chatId: string
@@ -10,6 +10,7 @@ type Props = {
 }
 
 export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
+  const formRef = useRef<HTMLFormElement>(null)
   const notificationDictRef = useRef<{
     [idMessage: string]: {
       idMessage: ReceiveNotificationModel['body']['idMessage']
@@ -108,6 +109,13 @@ export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
     await pollNotifications()
   }
 
+  const handleEnterPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      formRef.current?.requestSubmit()
+    }
+  }
+
   if (!chatId) {
     return (
       <div className="p-2 flex-1">
@@ -144,12 +152,17 @@ export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
         })}
       </div>
 
-      <form className="flex gap-2 mt-auto" onSubmit={handleSendMessage}>
+      <form
+        ref={formRef}
+        className="flex gap-2 mt-auto"
+        onSubmit={handleSendMessage}
+      >
         <textarea
           name="message"
           className="p-2.5 w-full text-sm text-gray-900 resize-none bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
           rows={1}
           placeholder="Message..."
+          onKeyDown={handleEnterPress}
         />
         <Button disabled={isSendMessageLoading}>Send</Button>
       </form>
