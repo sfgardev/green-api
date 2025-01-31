@@ -1,7 +1,14 @@
 import { messengerApi } from '@/features/messenger/api/api'
 import { ReceiveNotificationModel } from '@/features/messenger/api/types'
 import { Button } from '@/shared/ui/button'
-import { FormEvent, KeyboardEvent, useCallback, useRef } from 'react'
+import {
+  FormEvent,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 type Props = {
   chatId: string
@@ -9,18 +16,22 @@ type Props = {
   apiTokenInstance: string
 }
 
+type Notification = {
+  idMessage: ReceiveNotificationModel['body']['idMessage']
+  senderData: ReceiveNotificationModel['body']['senderData']
+  messageData: ReceiveNotificationModel['body']['messageData']
+  status: ReceiveNotificationModel['body']['status']
+}
+
 export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
   const formRef = useRef<HTMLFormElement>(null)
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const isPollingRef = useRef(false)
   const notificationDictRef = useRef<{
-    [idMessage: string]: {
-      idMessage: ReceiveNotificationModel['body']['idMessage']
-      senderData: ReceiveNotificationModel['body']['senderData']
-      messageData: ReceiveNotificationModel['body']['messageData']
-      status: ReceiveNotificationModel['body']['status']
-    }
+    [idMessage: string]: Notification
   }>({})
 
-  const isPollingRef = useRef(false)
+  const [notifications, setNotifications] = useState<Notification[]>([])
 
   const [sendMessage, { isLoading: isSendMessageLoading }] =
     messengerApi.useSendMessageMutation()
@@ -67,6 +78,8 @@ export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
         }
       }
 
+      setNotifications(Object.values(notificationDictRef.current))
+
       await deleteNotification({
         idInstance,
         apiTokenInstance,
@@ -78,6 +91,10 @@ export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
       isPollingRef.current = false
     }
   }, [receiveNotification, deleteNotification, idInstance, apiTokenInstance])
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [notifications])
 
   useEffect(() => {
     if (!chatId) return
@@ -129,7 +146,7 @@ export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
   return (
     <div className="p-2 flex flex-col flex-grow">
       <div className="flex flex-col gap-1 h-[calc(100dvh-42px)] overflow-y-auto pb-4">
-        {Object.values(notificationDictRef.current).map((message) => {
+        {notifications.map((message) => {
           const isMessageFromMe = !!message.messageData?.extendedTextMessageData
 
           if (!message.messageData) return null
@@ -150,6 +167,7 @@ export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
             </div>
           )
         })}
+        <div ref={bottomRef} />
       </div>
 
       <form
