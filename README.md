@@ -1,5 +1,44 @@
 # React + TypeScript + Vite
 
+## Инструкция по установке и запуску
+
+### Требования
+- Node.js (версия 16 или выше)
+- pnpm (рекомендуется версия 8 или выше)
+
+### Установка
+1. Клонируйте репозиторий:
+```bash
+git clone <url-репозитория>
+cd <название-проекта>
+```
+
+2. Установите зависимости:
+```bash
+pnpm install
+```
+
+### Запуск проекта
+
+#### Режим разработки
+Для запуска проекта в режиме разработки выполните:
+```bash
+pnpm dev
+```
+Приложение будет доступно по адресу: `http://localhost:5173`
+
+#### Сборка проекта
+Для создания продакшн-сборки выполните:
+```bash
+pnpm build
+```
+
+#### Предпросмотр продакшн-сборки
+Для локального запуска продакшн-сборки выполните:
+```bash
+pnpm preview
+```
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
