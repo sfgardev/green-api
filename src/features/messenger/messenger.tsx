@@ -53,21 +53,19 @@ export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
         return
       }
 
-      if (notificationDictRef.current[notification.body.idMessage]) {
+      const notificationByIdMessage =
+        notificationDictRef.current[notification.body.idMessage]
+
+      if (notificationByIdMessage) {
         notificationDictRef.current[notification.body.idMessage] = {
           idMessage:
-            notification.body.idMessage ||
-            notificationDictRef.current[notification.body.idMessage].idMessage,
+            notification.body.idMessage || notificationByIdMessage.idMessage,
           senderData:
-            notification.body.senderData ||
-            notificationDictRef.current[notification.body.idMessage].senderData,
+            notification.body.senderData || notificationByIdMessage.senderData,
           messageData:
             notification.body.messageData ||
-            notificationDictRef.current[notification.body.idMessage]
-              .messageData,
-          status:
-            notification.body.status ||
-            notificationDictRef.current[notification.body.idMessage].status,
+            notificationByIdMessage.messageData,
+          status: notification.body.status || notificationByIdMessage.status,
         }
       } else {
         notificationDictRef.current[notification.body.idMessage] = {
