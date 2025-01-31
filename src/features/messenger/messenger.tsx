@@ -128,7 +128,7 @@ export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
 
   return (
     <div className="p-2 flex flex-col flex-grow">
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 h-[calc(100dvh-42px)] overflow-y-auto pb-4">
         {Object.values(notificationDictRef.current).map((message) => {
           const isMessageFromMe = !!message.messageData?.extendedTextMessageData
 
