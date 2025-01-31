@@ -92,7 +92,7 @@ export const Messenger = ({ chatId, idInstance, apiTokenInstance }: Props) => {
     event.preventDefault()
     const form = event.currentTarget
     const formData = new FormData(form)
-    const message = formData.get('message') as string
+    const message = (formData.get('message') as string).trim()
 
     if (!message) return
 
